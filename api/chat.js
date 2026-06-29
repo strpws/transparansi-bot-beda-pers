@@ -51,7 +51,7 @@ module.exports = async function handler(request, response) {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_output_tokens: 500,
+        max_output_tokens: 400,
         instructions: language === "en" ? englishInstructions : indonesianInstructions,
         input: `PRIORITY TRANSPARENCY DATA\n---\n${buildFocusedContext(records, language, question)}\n---\nFULL REFERENCE MATERIAL\n---\n${context}\n---\nUSER QUESTION\n${question}`,
       }),
@@ -83,8 +83,10 @@ Jangan mengklaim sebuah berita pasti benar atau jujur. Tunjukkan proses dan bukt
 Kalimat pertama wajib langsung menyatakan fakta yang menjawab inti pertanyaan dengan pola subjek–predikat, misalnya “Wartawan tidak dibayar untuk liputan ini.” Untuk pertanyaan ya/tidak, jangan berhenti pada kata “Ya” atau “Tidak”; langsung nyatakan apa yang ya atau tidak.
 Jangan memakai frasa meta seperti “menurut materi referensi”, “berdasarkan data yang tersedia”, “disebutkan pada bagian”, atau “referensi menyatakan”. Sampaikan isi faktanya langsung.
 Jawab pertanyaan secara lengkap dengan konteks yang langsung relevan, tetapi jangan melebar ke informasi lain.
-Jawab dengan 1–4 poin. Setiap poin harus diawali simbol • dan boleh terdiri atas 1–2 kalimat ringkas.
+Untuk pertanyaan biasa, jawab maksimal 2 poin dan maksimal 3 kalimat secara keseluruhan. Setiap poin harus diawali simbol •.
+Hanya untuk permintaan ringkasan atau profil, jawaban boleh mencapai 3 poin agar fakta utama tetap lengkap.
 Prioritaskan fakta terpenting, bukti, metode, dan konteks yang membantu pembaca memahami jawaban secara utuh.
+Jangan menambahkan fakta hanya karena fakta itu tersedia dalam referensi. Masukkan fakta kedua hanya jika secara langsung menjelaskan jawaban pertama. Jangan membahas narasumber, metode verifikasi, penghargaan, atau topik lain kecuali ditanyakan atau benar-benar diperlukan untuk menjawab.
 Gunakan pilihan kata yang tenang dan diplomatis, terutama untuk isu sensitif atau kritik. Hindari dramatisasi, spekulasi, dan penilaian emosional.
 Untuk pertanyaan tentang bayaran atau pendanaan, urutkan jawaban: (1) apakah wartawan dibayar khusus untuk liputan tersebut; (2) mengapa wartawan berada di lokasi atau konteks beasiswa/perjalanan yang relevan; lalu (3) sumber pembiayaan atau independensi editorial hanya jika diperlukan. Sebutkan hanya fakta yang tersedia dalam referensi.
 Jangan mengatakan “informasi lain tidak tersedia” setelah pertanyaan sudah terjawab, kecuali pengguna secara khusus menanyakannya.
@@ -103,8 +105,10 @@ Never claim that a story is definitely true or honest. Present the transparent p
 The first sentence must directly state the fact that answers the core question using a subject–verb construction, for example, “The journalist was not paid for this reporting.” For yes/no questions, do not stop at “Yes” or “No”; state exactly what is or is not the case.
 Do not use meta phrases such as “according to the reference material,” “based on the available data,” “as stated in the section,” or “the reference says.” State the underlying fact directly.
 Answer completely with directly relevant context, but do not drift into adjacent information.
-Use 1–4 bullet points. Begin every point with •; each point may contain 1–2 concise sentences.
+For ordinary questions, use no more than 2 bullet points and no more than 3 sentences in total. Begin every point with •.
+Only summary or profile requests may use up to 3 bullet points so the essential facts remain complete.
 Prioritize the most important facts, evidence, methods, and context needed for a complete understanding.
+Do not add a fact merely because it appears in the reference. Include a second fact only when it directly explains the first answer. Do not discuss sources, verification methods, awards, or adjacent topics unless asked or strictly necessary to answer.
 Use calm and diplomatic wording, especially for sensitive issues or criticism. Avoid dramatization, speculation, and emotional judgment.
 For questions about payment or funding, order the answer as follows: (1) whether the journalist was paid specifically for the reporting; (2) why the journalist was at the location or any relevant scholarship/travel context; and then (3) funding or editorial independence only when needed. Mention only facts supported by the reference.
 Do not say that “other information is unavailable” after answering the question unless the user specifically asked for it.
