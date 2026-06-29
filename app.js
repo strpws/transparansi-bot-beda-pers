@@ -204,7 +204,7 @@ function toPointers(text) {
   const value = String(text || "").trim();
   if (!value || /^https?:\/\/\S+$/i.test(value) || value.startsWith("• ")) return value;
   const parts = value.split(/\n+|(?<=[.!?])\s+/).map((part) => part.trim()).filter(Boolean);
-  return parts.slice(0, 4).map((part) => `• ${part}`).join("\n");
+  return parts.slice(0, 6).map((part) => `• ${part}`).join("\n");
 }
 
 function collectSamples() {
