@@ -29,7 +29,7 @@ const ui = {
     reloadLabel: "Muat ulang data",
     suggestionsLabel: "Saran pertanyaan",
     credit: "Jawaban bersumber dari lembar transparansi editorial",
-    welcome: "Halo! Senang bertemu dengan Anda 👋 Saya siap membantu menjelaskan isi dan proses di balik liputan ini. Anda bisa memilih pertanyaan di bawah atau bertanya dengan kata-kata sendiri.",
+    welcome: "Halo! 👋 Saya adalah bot transparansi berita. Saya menjelaskan bagaimana berita ini dibuat—mulai dari peliputan, verifikasi, pemilihan narasumber, hingga penggunaan AI—agar Anda dapat menilai prosesnya dengan jelas.",
     fallback: "Maaf, saya belum menemukan informasi yang cocok. Coba tanyakan dengan kalimat lain—saya akan berusaha membantu.",
     readArticle: "Baca artikel",
     samplesTitle: "Contoh tulisan penulis",
@@ -45,7 +45,7 @@ const ui = {
     reloadLabel: "Reload data",
     suggestionsLabel: "Suggested questions",
     credit: "Answers are sourced from the editorial transparency sheet",
-    welcome: "Hello! It’s lovely to meet you 👋 I’m here to explain the story and the reporting process behind it. Choose a question below or ask in your own words.",
+    welcome: "Hello! 👋 I’m a news transparency bot. I explain how this story was produced—from reporting and verification to source selection and AI use—so you can assess the process clearly.",
     fallback: "Sorry, I couldn’t find a matching answer yet. Try asking in a different way—I’ll do my best to help.",
     readArticle: "Read article",
     samplesTitle: "Examples of the writer’s work",
@@ -193,8 +193,15 @@ function buildOverview() {
     const value = valueFor(record);
     if (!value) return "";
     const concise = value.length > 360 ? `${value.slice(0, 357).trim()}…` : value;
-    return `${label}: ${concise}`;
-  }).filter(Boolean).join("\n\n");
+    return `• ${label}: ${concise}`;
+  }).filter(Boolean).join("\n");
+}
+
+function toPointers(text) {
+  const value = String(text || "").trim();
+  if (!value || /^https?:\/\/\S+$/i.test(value) || value.startsWith("• ")) return value;
+  const parts = value.split(/\n+|(?<=[.!?])\s+/).map((part) => part.trim()).filter(Boolean);
+  return parts.slice(0, 5).map((part) => `• ${part}`).join("\n");
 }
 
 function collectSamples() {
@@ -311,7 +318,7 @@ async function ask(question) {
     thinkingMessage.remove();
     if (!best || best.score < config.minimumScore) addMessage(ui[language].fallback);
     else if (best.item.samples) addMessage({ samples: best.item.samples });
-    else addMessage(best.item.answer);
+    else addMessage(toPointers(best.item.answer));
   } finally {
     elements.input.disabled = false;
     elements.send.disabled = false;

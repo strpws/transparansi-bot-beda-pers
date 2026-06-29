@@ -2,6 +2,8 @@
 
 Chatbot dwibahasa Indonesia–Inggris yang membaca data transparansi editorial dari Google Spreadsheet. Aplikasi ini statis, responsif, dan siap dipasang melalui iframe.
 
+Bot berfungsi menjelaskan bagaimana berita dibuat—termasuk peliputan, verifikasi, pemilihan narasumber, independensi, dan penggunaan AI. Jawaban AI disajikan dalam poin singkat agar mudah dipindai. Bot menunjukkan bukti proses, bukan menjamin bahwa berita pasti benar atau jujur.
+
 ## Mengaktifkan jawaban AI
 
 Bot memiliki endpoint Vercel `/api/chat` yang membaca seluruh data dan `isi_artikel` dari Sheet. Tanpa API key, bot tetap memakai pencocokan lokal sebagai fallback.
