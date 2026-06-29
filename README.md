@@ -64,3 +64,10 @@ Ganti URL berikut dengan URL produksi Vercel:
 Jika area ICM sempit, tinggi `700`–`800` piksel biasanya nyaman. Pada layar kecil, bot otomatis memenuhi area iframe.
 
 Tambahkan `?lang=en` pada URL untuk membuka iframe langsung dalam bahasa Inggris, atau `?lang=id` untuk bahasa Indonesia.
+
+## Alamat setiap artikel
+
+- Artikel pertama: `https://transparansi-bot-beda-pers.vercel.app/`
+- Melarang Media Sosial Saja Tak Cukup: `https://transparansi-bot-beda-pers.vercel.app/?article=melarang-medsos-saja-tak-cukup`
+
+Tambahkan `&lang=en` pada alamat artikel yang sudah memiliki parameter untuk membukanya langsung dalam bahasa Inggris.

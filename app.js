@@ -1,4 +1,10 @@
 const config = window.CHATBOT_CONFIG;
+const urlParameters = new URLSearchParams(window.location.search);
+const requestedArticle = urlParameters.get("article");
+const articleSlug = config.articles?.[requestedArticle]
+  ? requestedArticle
+  : config.defaultArticle;
+const articleConfig = config.articles?.[articleSlug];
 const elements = {
   messages: document.querySelector("#messages"),
   suggestions: document.querySelector("#suggestions"),
@@ -64,7 +70,7 @@ const rules = [
   { match: /^alasan_pemilihan_narasumber/, q: { id: "Mengapa narasumber {n} dipilih?", en: "Why was source {n} selected?" }, k: { id: "alasan pemilihan narasumber ahli {n}", en: "reason selection interview source expert {n}" } },
 ];
 
-const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+const requestedLanguage = urlParameters.get("lang");
 let language = requestedLanguage === "en" || requestedLanguage === "id"
   ? requestedLanguage
   : (config.defaultLanguage === "en" ? "en" : "id");
@@ -294,7 +300,7 @@ async function ask(question) {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: cleanQuestion, language }),
+      body: JSON.stringify({ question: cleanQuestion, language, article: articleSlug }),
     });
     const result = await response.json();
     if (!response.ok || !result.answer) throw new Error(result.code || result.error || "AI unavailable");
@@ -341,8 +347,8 @@ async function loadData() {
   setStatus("loading", ui[language].loading);
   elements.reload.disabled = true;
   try {
-    const separator = config.sheetUrl.includes("?") ? "&" : "?";
-    const response = await fetch(`${config.sheetUrl}${separator}cache=${Date.now()}`);
+    const separator = articleConfig.sheetUrl.includes("?") ? "&" : "?";
+    const response = await fetch(`${articleConfig.sheetUrl}${separator}cache=${Date.now()}`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     records = rowsToRecords(parseCSV(await response.text()));
     if (!records.length) throw new Error("Spreadsheet kosong");
@@ -362,7 +368,7 @@ elements.form.addEventListener("submit", (event) => { event.preventDefault(); as
 elements.reload.addEventListener("click", loadData);
 elements.languageButtons.forEach((button) => button.addEventListener("click", () => applyLanguage(button.dataset.language)));
 
-document.title = config.botName;
-document.querySelector("h1").textContent = config.botName;
+document.title = articleConfig.botName;
+document.querySelector("h1").textContent = articleConfig.botName;
 applyLanguage(language);
 loadData();
