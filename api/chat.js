@@ -191,7 +191,7 @@ function buildFocusedContext(records, language, question) {
   } else if (/(wartawan|reporter|penulis|writer|journalist|author)/.test(query)) {
     patterns = [/^nama_reporter$/, /^profil_reporter$/, /^latar_belakang_pemberitaan$/];
   } else if (/(cara dibuat|proses pembuatan|proses liputan|peliputan|how.*made|article produced|reporting process|newsgathering)/.test(query)) {
-    patterns = [/^cara_peliputan$/, /^metode_verifikasi$/, /^latar_belakang_pemberitaan$/];
+    patterns = [/^cara_peliputan$/, /^metode_verifikasi$/, /^metode_penunjang$/];
   } else if (/(angle|sudut pandang|perspective)/.test(query)) {
     patterns = [/^alasan_angle$/];
   }
@@ -215,7 +215,6 @@ function scopeRecordsForQuestion(records, question) {
       "cara_peliputan",
       "metode_verifikasi",
       "metode_penunjang",
-      "latar_belakang_pemberitaan",
     ].includes(record.key));
   }
 
