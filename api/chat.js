@@ -40,6 +40,10 @@ module.exports = async function handler(request, response) {
     const sheetResponse = await fetch(`${sheetUrl}&cache=${Date.now()}`);
     if (!sheetResponse.ok) throw new Error(`Sheet HTTP ${sheetResponse.status}`);
     const records = rowsToRecords(parseCSV(await sheetResponse.text()));
+    const approvedAnswer = getApprovedAnswer(records, language, question);
+    if (approvedAnswer) {
+      return response.status(200).json({ answer: approvedAnswer });
+    }
     const context = buildContext(scopeRecordsForQuestion(records, question), language);
     if (!context) throw new Error("Konteks artikel kosong");
 
@@ -53,7 +57,7 @@ module.exports = async function handler(request, response) {
         model: MODEL,
         max_output_tokens: 400,
         instructions: language === "en" ? englishInstructions : indonesianInstructions,
-        input: `PRIORITY TRANSPARENCY DATA\n---\n${buildFocusedContext(records, language, question)}\n---\nFULL REFERENCE MATERIAL\n---\n${context}\n---\nUSER QUESTION\n${question}`,
+        input: `PRIORITY TRANSPARENCY DATA\n---\n${buildFocusedContext(records, language, question)}\n---\nQUESTION-SPECIFIC GUIDANCE\n---\n${buildQuestionGuidance(question, language)}\n---\nFULL REFERENCE MATERIAL\n---\n${context}\n---\nUSER QUESTION\n${question}`,
       }),
     });
 
@@ -226,6 +230,37 @@ function scopeRecordsForQuestion(records, question) {
   }
 
   return records.filter((record) => !/^apakah_ai_digunakan/.test(record.key));
+}
+
+function buildQuestionGuidance(question, language) {
+  const query = normalizeKey(question).replace(/_/g, " ");
+  const asksAboutImportance = /((kenapa|mengapa).*(berita|artikel).*(penting)|why.*(story|article).*important)/.test(query);
+  if (!asksAboutImportance) return language === "en" ? "Follow the general instructions." : "Ikuti instruksi umum.";
+
+  if (language === "en") {
+    return `Answer in exactly two sharp bullet points.
+• First state the central public stake: the concrete risk, policy gap, or consequence, and who is affected.
+• Then give the strongest fact from the article showing why the issue is urgent now.
+Do not say the story is important merely because it compares countries, helps readers see differences, provides insight, or raises awareness. Name the real-world stakes directly.`;
+  }
+
+  return `Jawab tepat dalam dua poin yang tajam.
+• Poin pertama menyatakan taruhan utama bagi publik: risiko konkret, kekosongan kebijakan, atau akibatnya, serta siapa yang terdampak.
+• Poin kedua menyebut fakta terkuat dalam artikel yang menunjukkan mengapa persoalan ini mendesak sekarang.
+Jangan mengatakan berita penting hanya karena membandingkan negara, membantu pembaca melihat perbedaan, memberi wawasan, atau meningkatkan kesadaran. Sebutkan taruhannya secara langsung.`;
+}
+
+function getApprovedAnswer(records, language, question) {
+  const query = normalizeKey(question).replace(/_/g, " ");
+  const asksAboutImportance = /((kenapa|mengapa).*(berita|artikel).*(penting)|why.*(story|article).*important)/.test(query);
+  if (!asksAboutImportance) return "";
+
+  const record = records.find((item) => item.key === "relevansi_publik_indonesia");
+  if (!record) return "";
+  const selected = record[language];
+  const value = selected || record.id || record.en || "";
+  if (/^#(?:VALUE!|REF!|N\/A|ERROR!|NAME\?)/i.test(value)) return "";
+  return value.trim();
 }
 
 function extractOutputText(data) {
