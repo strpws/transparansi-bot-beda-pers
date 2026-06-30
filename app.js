@@ -258,7 +258,16 @@ function addMessage(content, sender = "bot") {
   const wrapper = document.createElement("div"), bubble = document.createElement("div");
   wrapper.className = `message ${sender}`;
   bubble.className = "bubble";
-  if (content?.samples) {
+  if (content?.typing) {
+    bubble.classList.add("typing-bubble");
+    bubble.setAttribute("aria-label", ui[language].thinking);
+    for (let index = 0; index < 3; index += 1) {
+      const dot = document.createElement("span");
+      dot.className = "typing-dot";
+      dot.setAttribute("aria-hidden", "true");
+      bubble.appendChild(dot);
+    }
+  } else if (content?.samples) {
     const title = document.createElement("strong");
     title.textContent = ui[language].samplesTitle;
     const list = document.createElement("ol");
@@ -305,7 +314,7 @@ async function ask(question) {
   elements.input.value = "";
   elements.input.disabled = true;
   elements.send.disabled = true;
-  const thinkingMessage = addMessage(ui[language].thinking);
+  const thinkingMessage = addMessage({ typing: true });
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
