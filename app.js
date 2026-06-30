@@ -67,6 +67,7 @@ const rules = [
   { match: /^metode_penunjang$/, q: { id: "Apa metode penunjang liputan ini?", en: "What supporting methods were used?" }, k: { id: "metode penunjang referensi tambahan data", en: "supporting methods references additional data" } },
   { match: /^alasan_angle$/, q: { id: "Kenapa berita ini penting?", en: "Why is this story important?" }, k: { id: "kenapa mengapa berita penting alasan angle sudut pandang fokus berita", en: "why story important reason angle perspective focus" } },
   { match: /^latar_belakang_pemberitaan$/, q: { id: "Apa latar belakang pemberitaan ini?", en: "What is the background of this coverage?" }, k: { id: "latar belakang konteks alasan liputan", en: "background context reason coverage" } },
+  { match: /^relevansi_publik_indonesia$/, q: { id: "Kenapa berita ini penting?", en: "Why is this story important?" }, k: { id: "kenapa mengapa berita penting publik indonesia relevansi dampak", en: "why story important Indonesian public relevance impact" } },
   { match: /^apakah_ai_digunakan/, q: { id: "Apakah AI digunakan dalam pembuatan?", en: "Was AI used in its production?" }, k: { id: "ai kecerdasan buatan transkripsi penggunaan pembuatan", en: "ai artificial intelligence transcription use production" } },
   { match: /^nama_narasumber/, q: { id: "Siapa narasumber {n}?", en: "Who is source {n}?" }, k: { id: "nama narasumber sumber wawancara ahli siapa {n}", en: "name interview source expert who {n}" } },
   { match: /^atribusi_narasumber/, q: { id: "Apa keahlian narasumber {n}?", en: "What are source {n}’s credentials?" }, k: { id: "atribusi profil jabatan keahlian narasumber {n}", en: "credentials profile role expertise source {n}" } },
@@ -293,7 +294,10 @@ function addMessage(content, sender = "bot") {
 
 function showSuggestions() {
   elements.suggestions.replaceChildren();
-  const preferred = ["ringkasan", "cara_peliputan", "apakah_ai_digunakan_dalam_proses_berita_ini", "alasan_angle"];
+  const importanceKey = knowledgeBase.some((item) => item.key === "relevansi_publik_indonesia")
+    ? "relevansi_publik_indonesia"
+    : "alasan_angle";
+  const preferred = ["ringkasan", "cara_peliputan", "apakah_ai_digunakan_dalam_proses_berita_ini", importanceKey];
   const sorted = [...knowledgeBase].sort((a, b) => {
     const ai = preferred.indexOf(a.key), bi = preferred.indexOf(b.key);
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
