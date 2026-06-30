@@ -16,5 +16,5 @@ window.CHATBOT_CONFIG = {
   },
   defaultLanguage: "id",
   minimumScore: 0.3,
-  suggestionCount: 6,
+  suggestionCount: 3,
 };

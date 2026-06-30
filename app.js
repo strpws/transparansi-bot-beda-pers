@@ -31,7 +31,7 @@ const ui = {
     suggestionsLabel: "Saran pertanyaan",
     credit: "Jawaban bersumber dari lembar transparansi editorial",
     copyright: "© 2026 Irene Sarwindaningrum untuk Kompas.id",
-    welcome: "Halo! 👋 Saya adalah bot transparansi berita. Saya menjelaskan bagaimana berita ini dibuat—mulai dari peliputan, verifikasi, pemilihan narasumber, hingga penggunaan AI—agar Anda dapat menilai prosesnya dengan jelas.",
+    welcome: "Halo Sahabat Kompas 👋 Saya adalah bot transparansi berita. Saya bisa jelaskan proses peliputan hingga penyusunan artikel ini. Apa yang ingin Anda ketahui?",
     fallback: "Maaf, saya belum menemukan informasi yang cocok. Coba tanyakan dengan kalimat lain—saya akan berusaha membantu.",
     readArticle: "Baca artikel",
     samplesTitle: "Contoh tulisan penulis",
@@ -48,7 +48,7 @@ const ui = {
     suggestionsLabel: "Suggested questions",
     credit: "Answers are sourced from the editorial transparency sheet",
     copyright: "© 2026 Irene Sarwindaningrum for Kompas.id",
-    welcome: "Hello! 👋 I’m a news transparency bot. I explain how this story was produced—from reporting and verification to source selection and AI use—so you can assess the process clearly.",
+    welcome: "Hello! 👋 I’m a news transparency bot. I can explain how this story was reported and prepared. What would you like to know?",
     fallback: "Sorry, I couldn’t find a matching answer yet. Try asking in a different way—I’ll do my best to help.",
     readArticle: "Read article",
     samplesTitle: "Examples of the writer’s work",
@@ -62,12 +62,12 @@ const rules = [
   { match: /^tanggal_liputan/, q: { id: "Kapan liputan ini dilakukan?", en: "When was this story reported?" }, k: { id: "tanggal waktu kapan liputan terbit", en: "date time when reporting published" } },
   { match: /^nama_reporter$/, q: { id: "Siapa penulis berita ini?", en: "Who wrote this story?" }, k: { id: "reporter wartawan jurnalis penulis siapa", en: "reporter journalist writer author who" } },
   { match: /^(profil|bio|latar_belakang)_(penulis|reporter)$/, q: { id: "Apa latar belakang penulisnya?", en: "What is the writer’s background?" }, k: { id: "profil biodata latar belakang pengalaman penulis reporter wartawan", en: "profile biography bio background experience writer reporter journalist" } },
-  { match: /^cara_peliputan$/, q: { id: "Bagaimana cara peliputan berita ini?", en: "How was this story reported?" }, k: { id: "cara proses peliputan wawancara pengamatan reportase", en: "how reporting process interview observation newsgathering" } },
+  { match: /^cara_peliputan$/, q: { id: "Bagaimana proses pembuatan?", en: "How was the article produced?" }, k: { id: "cara proses pembuatan peliputan wawancara pengamatan reportase", en: "how article produced reporting process interview observation newsgathering" } },
   { match: /^metode_verifikasi$/, q: { id: "Bagaimana informasi dalam berita diverifikasi?", en: "How was the information verified?" }, k: { id: "metode verifikasi cek fakta data dokumen sumber validasi", en: "verification fact check data documents sources validation" } },
   { match: /^metode_penunjang$/, q: { id: "Apa metode penunjang liputan ini?", en: "What supporting methods were used?" }, k: { id: "metode penunjang referensi tambahan data", en: "supporting methods references additional data" } },
   { match: /^alasan_angle$/, q: { id: "Mengapa sudut pandang berita ini dipilih?", en: "Why was this story angle chosen?" }, k: { id: "alasan angle sudut pandang fokus berita", en: "reason angle perspective focus story" } },
   { match: /^latar_belakang_pemberitaan$/, q: { id: "Apa latar belakang pemberitaan ini?", en: "What is the background of this coverage?" }, k: { id: "latar belakang konteks alasan liputan", en: "background context reason coverage" } },
-  { match: /^apakah_ai_digunakan/, q: { id: "Apakah AI digunakan dalam proses berita ini?", en: "Was AI used in producing this story?" }, k: { id: "ai kecerdasan buatan transkripsi penggunaan", en: "ai artificial intelligence transcription use" } },
+  { match: /^apakah_ai_digunakan/, q: { id: "Apakah AI digunakan dalam pembuatan?", en: "Was AI used in its production?" }, k: { id: "ai kecerdasan buatan transkripsi penggunaan pembuatan", en: "ai artificial intelligence transcription use production" } },
   { match: /^nama_narasumber/, q: { id: "Siapa narasumber {n}?", en: "Who is source {n}?" }, k: { id: "nama narasumber sumber wawancara ahli siapa {n}", en: "name interview source expert who {n}" } },
   { match: /^atribusi_narasumber/, q: { id: "Apa keahlian narasumber {n}?", en: "What are source {n}’s credentials?" }, k: { id: "atribusi profil jabatan keahlian narasumber {n}", en: "credentials profile role expertise source {n}" } },
   { match: /^alasan_pemilihan_narasumber/, q: { id: "Mengapa narasumber {n} dipilih?", en: "Why was source {n} selected?" }, k: { id: "alasan pemilihan narasumber ahli {n}", en: "reason selection interview source expert {n}" } },
@@ -153,7 +153,7 @@ function createKnowledgeBase() {
   if (overview) {
     items.push({
       key: "ringkasan",
-      question: language === "id" ? "Bisakah kamu merangkum liputan ini?" : "Can you summarize this coverage?",
+      question: language === "id" ? "Apa inti artikel?" : "What is the article’s main point?",
       keywords: language === "id" ? "ringkas rangkum ringkasan ikhtisar keseluruhan isi liputan" : "summarize summary overview entire coverage story",
       answer: overview,
     });
@@ -284,7 +284,7 @@ function addMessage(content, sender = "bot") {
 
 function showSuggestions() {
   elements.suggestions.replaceChildren();
-  const preferred = ["ringkasan", "judul", "nama_reporter", "profil_reporter", "profil_penulis", "metode_verifikasi", "apakah_ai_digunakan_dalam_proses_berita_ini"];
+  const preferred = ["ringkasan", "cara_peliputan", "apakah_ai_digunakan_dalam_proses_berita_ini"];
   const sorted = [...knowledgeBase].sort((a, b) => {
     const ai = preferred.indexOf(a.key), bi = preferred.indexOf(b.key);
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
