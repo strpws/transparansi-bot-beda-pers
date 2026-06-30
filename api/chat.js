@@ -180,6 +180,8 @@ function buildFocusedContext(records, language, question) {
   let patterns = [];
   if (/(inti artikel|ringkas|rangkuman|ringkasan|main point|summary|summarize)/.test(query)) {
     patterns = [/^isi_artikel$/, /^judul$/, /^alasan_angle$/];
+  } else if (/(kenapa|mengapa).*(berita|artikel).*(penting)|why.*(story|article).*important/.test(query)) {
+    patterns = [/^alasan_angle$/, /^isi_artikel$/, /^judul$/];
   } else if (/(dibayar|bayaran|dana|biaya|beasiswa|kompensasi|paid|payment|funded|funding|compensation|scholarship)/.test(query)) {
     patterns = [/^latar_belakang_pemberitaan$/, /^nama_reporter$/];
   } else if (/(verifikasi|cek fakta|akurasi|verified|verification|fact check|accuracy)/.test(query)) {
@@ -207,6 +209,11 @@ function scopeRecordsForQuestion(records, question) {
   const asksAboutAi = /(kecerdasan buatan|\bai\b|artificial intelligence)/.test(query);
   if (asksAboutAi) {
     return records.filter((record) => /^apakah_ai_digunakan/.test(record.key));
+  }
+
+  const asksAboutImportance = /((kenapa|mengapa).*(berita|artikel).*(penting)|why.*(story|article).*important)/.test(query);
+  if (asksAboutImportance) {
+    return records.filter((record) => ["alasan_angle", "isi_artikel", "judul"].includes(record.key));
   }
 
   const asksAboutProcess = /(cara dibuat|proses pembuatan|proses liputan|peliputan|how.*made|article produced|reporting process|newsgathering)/.test(query);
