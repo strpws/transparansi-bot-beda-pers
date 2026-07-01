@@ -3,6 +3,12 @@
    Aligned to Visual Guidelines v2 (PTN/PTS infographic system):
    PT Sans (UI/data) + Lora (editorial), blue/gold palette,
    flat editorial surfaces, guide radii, reduced-motion support.
+
+   Fluid sizing: base font is clamp()-scaled; font-sizes in rem,
+   spacing/padding/gap/height in em. px only for hairline borders
+   and the max-width cap. The card fills the iframe's vertical
+   window (no fixed height / aspect-ratio / min-width) so a tall
+   CMS iframe shows no blank gap and narrow ones never overflow.
    ────────────────────────────────────────────────────────── */
 
 :root {
@@ -29,8 +35,7 @@
   /* Error state — outside the core palette, used only for the status dot */
   --danger:     #C0392B;
 
-  /* Radii */
-  --r-card: 12px;
+  /* Radii (decorative corner geometry) */
   --r-lg:   10px;
   --r-md:   8px;
   --r-sm:   6px;
@@ -39,39 +44,44 @@
   /* Fonts */
   --font-ui:  'PT Sans', ui-sans-serif, system-ui, sans-serif;
   --font-ed:  'Lora', Georgia, 'Times New Roman', serif;
-
-  font-family: var(--font-ui);
-  color: var(--grey-dk);
-  background: var(--page-bg);
-  font-synthesis: none;
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; min-height: 100%; }
+
+/* Base font drives the whole rem/em cascade. Inside an iframe,
+   2.1vw = 2.1% of the iframe width. */
+html { font-size: clamp(13px, 2.1vw, 17px); }
+html, body { height: 100%; margin: 0; }
+
 body {
   min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  font-family: var(--font-ui);
+  color: var(--grey-dk);
   background: var(--page-bg);
   line-height: 1.5;
+  font-synthesis: none;
 }
 button, input { font: inherit; }
 
+/* Fill the iframe; centre the card horizontally when the iframe
+   is wider than the cap. */
 .app-shell {
-  min-height: 100vh;
-  display: grid;
-  place-content: center;
-  padding: 24px;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
 }
 
-/* ── Card shell: flat, hairline border, no shadow (guide rule) ── */
+/* ── Card shell: fills the iframe height, flat white surface ── */
 .chat-card {
-  width: min(600px, calc(100vw - 40px));
-  height: min(760px, calc(100vh - 84px));
-  min-height: 540px;
+  width: 100%;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--r-card);
   background: var(--white);
 }
 
@@ -79,17 +89,17 @@ button, input { font: inherit; }
 .chat-header {
   display: flex;
   align-items: center;
-  gap: 13px;
-  min-height: 84px;
-  padding: 16px 19px;
+  gap: .8em;
+  min-height: 5.25em;
+  padding: 1em 1.19em;
   color: var(--white);
   background: var(--blue);
-  border-bottom: 2px solid var(--gold);
+  border-bottom: .14em solid var(--gold);
 }
 
 .bot-avatar {
-  width: 44px;
-  height: 44px;
+  width: 2.75em;
+  height: 2.75em;
   flex: none;
   display: grid;
   place-items: center;
@@ -101,11 +111,11 @@ button, input { font: inherit; }
   display: block;
 }
 
-.identity { min-width: 0; }
+.identity { min-width: 0; flex: 1 1 auto; }
 .identity h1 {
-  margin: 0 0 3px;
+  margin: 0 0 .17em;
   font-family: var(--font-ed);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: .005em;
   white-space: nowrap;
@@ -115,14 +125,17 @@ button, input { font: inherit; }
 .identity p {
   margin: 0;
   color: #CFE0F0;
-  font-size: 12px;
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .status-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 7px;
+  width: .67em;
+  height: .67em;
+  margin-right: .58em;
   border-radius: 50%;
   background: #9FC4E4;
 }
@@ -132,34 +145,34 @@ button, input { font: inherit; }
 .language-switch {
   display: flex;
   margin-left: auto;
-  padding: 3px;
+  padding: .19em;
   border-radius: var(--r-md);
   background: rgba(255, 255, 255, .16);
 }
 .language-switch button {
-  width: 36px;
-  height: 30px;
+  width: 3em;
+  height: 2.5em;
   border: 0;
   border-radius: var(--r-sm);
   color: #CFE0F0;
   background: transparent;
   cursor: pointer;
-  font-size: 12px;
+  font-size: .75rem;
   font-weight: 700;
   transition: background .13s ease, color .13s ease;
 }
 .language-switch button.active { color: var(--blue); background: var(--white); }
 
 .icon-button {
-  width: 37px;
-  height: 37px;
+  width: 1.85em;
+  height: 1.85em;
   flex: none;
   border: 0;
   border-radius: var(--r-md);
   color: var(--white);
   background: rgba(255, 255, 255, .16);
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1.25rem;
   transition: background .13s ease;
 }
 .icon-button:hover { background: rgba(255, 255, 255, .28); }
@@ -167,22 +180,23 @@ button, input { font: inherit; }
 /* ── Messages ── */
 .messages {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 24px 21px 10px;
+  padding: 1.5em 1.31em .625em;
   background: var(--white);
   scroll-behavior: smooth;
 }
-.message { display: flex; margin-bottom: 14px; }
+.message { display: flex; margin-bottom: .875em; }
 .message.user { justify-content: flex-end; }
 
 .bubble {
-  max-width: min(82%, 560px);
-  padding: 12px 15px;
+  max-width: min(82%, 35rem);
+  padding: .86em 1.07em;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 2px;
   background: var(--blue-pale);
   color: var(--grey-dk);
   line-height: 1.55;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -194,21 +208,21 @@ button, input { font: inherit; }
 .bubble a { color: var(--blue); font-weight: 700; text-decoration: none; }
 .bubble a:hover { text-decoration: underline; }
 .user .bubble a { color: var(--white); text-decoration: underline; }
-.bubble strong { display: block; margin-bottom: 8px; font-weight: 700; color: var(--black); }
-.bubble ol { margin: 0; padding-left: 21px; white-space: normal; }
-.bubble li + li { margin-top: 8px; }
+.bubble strong { display: block; margin-bottom: .57em; font-weight: 700; color: var(--black); }
+.bubble ol { margin: 0; padding-left: 1.5em; white-space: normal; }
+.bubble li + li { margin-top: .57em; }
 
 .typing-bubble {
-  min-width: 58px;
+  min-width: 4.14em;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 15px 16px;
+  gap: .36em;
+  padding: 1.07em 1.14em;
 }
 .typing-dot {
-  width: 7px;
-  height: 7px;
+  width: .5em;
+  height: .5em;
   border-radius: 50%;
   background: var(--blue);
   animation: typing-dot 1.15s infinite ease-in-out;
@@ -220,15 +234,15 @@ button, input { font: inherit; }
 .suggestions {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  padding: 8px 21px 13px;
+  gap: .5em;
+  padding: .5em 1.31em .81em;
   background: var(--white);
 }
 .suggestions:empty { display: none; }
 .suggestions button {
   width: 100%;
   max-width: 100%;
-  padding: 8px 9px;
+  padding: .74em .84em;
   border: 0;
   border-radius: var(--r-pill);
   color: var(--blue-deep);
@@ -237,7 +251,7 @@ button, input { font: inherit; }
   line-height: 1.35;
   text-align: center;
   white-space: normal;
-  font-size: 10.75px;
+  font-size: .67rem;
   font-weight: 700;
   letter-spacing: .02em;
   transition: background .13s ease;
@@ -247,15 +261,15 @@ button, input { font: inherit; }
 /* ── Composer ── */
 .chat-form {
   display: flex;
-  gap: 9px;
-  padding: 14px 17px 16px;
+  gap: .56em;
+  padding: .875em 1.06em 1em;
   border-top: 1px solid var(--border);
   background: var(--white);
 }
 .chat-form input {
   flex: 1;
   min-width: 0;
-  padding: 13px 15px;
+  padding: .81em .94em;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   outline: none;
@@ -267,39 +281,38 @@ button, input { font: inherit; }
 .chat-form input:focus {
   border-color: var(--blue);
   background: var(--white);
-  box-shadow: 0 0 0 3px rgba(0, 85, 154, .14);
+  box-shadow: 0 0 0 .19em rgba(0, 85, 154, .14);
 }
 .chat-form button {
-  width: 47px;
+  width: 2.94em;
   flex: none;
   border: 0;
   border-radius: var(--r-md);
   color: var(--white);
   background: var(--blue);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   transition: background .13s ease;
 }
 .chat-form button:hover { background: var(--blue-hover); }
 .chat-form input:disabled, .chat-form button:disabled { cursor: wait; opacity: .62; }
 
 /* ── Footer ── */
-.copyright {
-  margin: 0;
-  padding: 0 17px 12px;
-  color: var(--grey-lt);
-  background: var(--white);
-  text-align: center;
-  font-size: 10.5px;
-}
-
 .credit {
   margin: 0;
-  padding: 10px 17px 2px;
+  padding: .95em 1.62em .19em;
   color: var(--grey-md);
   background: var(--white);
   text-align: center;
-  font-size: 10.5px;
+  font-size: .66rem;
+}
+.copyright {
+  margin: 0;
+  padding: 0 1.62em 1.14em;
+  color: var(--grey-lt);
+  background: var(--white);
+  text-align: center;
+  font-size: .66rem;
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
@@ -318,23 +331,4 @@ button, input { font: inherit; }
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Full-bleed when embedded via iframe. */
-@media (max-width: 620px) {
-  .app-shell { padding: 0; place-content: stretch; }
-  .chat-card { width: 100vw; height: 100vh; min-height: 0; border: 0; border-radius: 0; }
-  .chat-header { min-height: 76px; padding: 13px; gap: 9px; }
-  .bot-avatar { width: 40px; height: 40px; }
-  .identity h1 { max-width: 145px; font-size: 15px; }
-  .identity p { max-width: 145px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .language-switch button { width: 32px; }
-  .icon-button { width: 34px; height: 34px; }
-  .bubble { max-width: 88%; }
-}
-
-@media (max-width: 400px) {
-  .identity h1 { max-width: 115px; }
-  .identity p { max-width: 115px; }
-  .language-switch button { width: 29px; }
 }
