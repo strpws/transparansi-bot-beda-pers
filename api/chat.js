@@ -1,8 +1,8 @@
 const DEFAULT_ARTICLE = "beda-nasib-pers";
 const SHEETS = {
-  "beda-nasib-pers": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwDmKQ55VvM_BJqSdISJbERkHa23JBe0ER_c5mneaA5AOs5hqSQt0QgfHJ49qEmAj4ianyAik-TOJ4/pub?output=csv",
-  "melarang-medsos-saja-tak-cukup": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTa9kEv3h2Rn6PHIoVGTDbpt95L3C1jquW6rkZdAtSqLF75RFxdJUL99zbGTopLLAPDg9M7EzAqVjbz/pub?output=csv",
-  "menangkal-bukan-membungkam": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoM-56g1qF9njmnGYZqsAZ1-qKSEBRzIS_QPjkUv-tr0M9XPTMTEKnHCte06wlVf-Mi4PZtfWfgcYK/pub?output=csv",
+  "beda-nasib-pers": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrU5NGslefJykKoZddjbTxi2Uzrm-G8veyV2sk3RV45lJzZ9qSHmHYUEJxSDqXsDsRpZRwPMPdUkKx/pub?output=csv",
+  "melarang-medsos-saja-tak-cukup": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMSK8_I8ZGfMOXgv-C8b_dZZNV66gRXrkHYSDLwJatBYxoK9zC7tQ0_mVWoCJVWeE8mL5RSCkFo02i/pub?gid=0&single=true&output=csv",
+  "menangkal-bukan-membungkam": "https://docs.google.com/spreadsheets/d/e/2PACX-1vStBJdXp9zu0jbfiy1XpfajUuRdd8LcZKvLnY3A7FU-oUgYpezDSaPyoeMGVezeff3QbZKnK7tLxaS7/pub?gid=0&single=true&output=csv",
 };
 const MODEL = process.env.OPENAI_MODEL || "gpt-5.4-mini";
 const requestsByIp = new Map();

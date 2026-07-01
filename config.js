@@ -3,15 +3,15 @@ window.CHATBOT_CONFIG = {
   articles: {
     "beda-nasib-pers": {
       botName: "Transparansi Bot Beda Pers",
-      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwDmKQ55VvM_BJqSdISJbERkHa23JBe0ER_c5mneaA5AOs5hqSQt0QgfHJ49qEmAj4ianyAik-TOJ4/pub?output=csv",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrU5NGslefJykKoZddjbTxi2Uzrm-G8veyV2sk3RV45lJzZ9qSHmHYUEJxSDqXsDsRpZRwPMPdUkKx/pub?output=csv",
     },
     "melarang-medsos-saja-tak-cukup": {
       botName: "Transparansi Bot: Melarang Medsos Saja Tak Cukup",
-      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTa9kEv3h2Rn6PHIoVGTDbpt95L3C1jquW6rkZdAtSqLF75RFxdJUL99zbGTopLLAPDg9M7EzAqVjbz/pub?output=csv",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMSK8_I8ZGfMOXgv-C8b_dZZNV66gRXrkHYSDLwJatBYxoK9zC7tQ0_mVWoCJVWeE8mL5RSCkFo02i/pub?gid=0&single=true&output=csv",
     },
     "menangkal-bukan-membungkam": {
       botName: "Transparansi Bot: Menangkal, Bukan Membungkam",
-      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoM-56g1qF9njmnGYZqsAZ1-qKSEBRzIS_QPjkUv-tr0M9XPTMTEKnHCte06wlVf-Mi4PZtfWfgcYK/pub?output=csv",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStBJdXp9zu0jbfiy1XpfajUuRdd8LcZKvLnY3A7FU-oUgYpezDSaPyoeMGVezeff3QbZKnK7tLxaS7/pub?gid=0&single=true&output=csv",
     },
   },
   defaultLanguage: "id",
