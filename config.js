@@ -2,7 +2,7 @@ window.CHATBOT_CONFIG = {
   defaultArticle: "beda-nasib-pers",
   articles: {
     "beda-nasib-pers": {
-      botName: "Transparansi Bot Beda Pers",
+      botName: "Transparansi Bot: Beda Nasib Pers",
       sheetUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrU5NGslefJykKoZddjbTxi2Uzrm-G8veyV2sk3RV45lJzZ9qSHmHYUEJxSDqXsDsRpZRwPMPdUkKx/pub?output=csv",
     },
     "melarang-medsos-saja-tak-cukup": {
