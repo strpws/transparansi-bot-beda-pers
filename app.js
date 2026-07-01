@@ -31,8 +31,9 @@ const ui = {
     suggestionsLabel: "Saran pertanyaan",
     credit: "Jawaban bersumber dari lembar transparansi editorial",
     copyright: "© 2026 Irene Sarwindaningrum untuk Kompas.id",
-    welcome: "Halo Sahabat Kompas 👋 Saya adalah bot transparansi berita. Saya bisa jelaskan proses peliputan hingga penyusunan artikel ini. Apa yang ingin Anda ketahui?",
+    welcome: "Halo Sahabat Kompas 👋 Saya adalah bot transparansi berita. Saya bisa jelaskan proses peliputan hingga penyusunan artikel ini. Harap tidak memasukkan data pribadi. Apa yang ingin Anda ketahui?",
     fallback: "Maaf, saya belum menemukan informasi yang cocok. Coba tanyakan dengan kalimat lain—saya akan berusaha membantu.",
+    sensitiveDataWarning: "Demi keamanan, pertanyaan yang memuat email, nomor telepon, alamat rumah, atau data sensitif tidak dikirim ke bot. Silakan hapus data pribadi itu, lalu kirim ulang pertanyaannya.",
     readArticle: "Baca artikel",
     samplesTitle: "Contoh tulisan penulis",
     thinking: "Sebentar, saya sedang membaca sumbernya…",
@@ -48,8 +49,9 @@ const ui = {
     suggestionsLabel: "Suggested questions",
     credit: "Answers are sourced from the editorial transparency sheet",
     copyright: "© 2026 Irene Sarwindaningrum for Kompas.id",
-    welcome: "Hello! 👋 I’m a news transparency bot. I can explain how this story was reported and prepared. What would you like to know?",
+    welcome: "Hello! 👋 I’m a news transparency bot. I can explain how this story was reported and prepared. Please do not enter personal data. What would you like to know?",
     fallback: "Sorry, I couldn’t find a matching answer yet. Try asking in a different way—I’ll do my best to help.",
+    sensitiveDataWarning: "For safety, questions containing an email address, phone number, home address, or sensitive data are not sent to the bot. Please remove the personal data and send the question again.",
     readArticle: "Read article",
     samplesTitle: "Examples of the writer’s work",
     thinking: "One moment, I’m reading the source…",
@@ -255,6 +257,14 @@ function appendLinkedText(container, text) {
   });
 }
 
+function containsPersonalData(text) {
+  const value = String(text || "");
+  const emailPattern = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+  const phonePattern = /(?:\+?\d[\s().-]*){9,}\d/;
+  const addressPattern = /\b(?:alamat|address|rumah|home address|jalan|jl\.?|jln\.?|street|st\.?|rt|rw)\b/i;
+  return emailPattern.test(value) || phonePattern.test(value) || addressPattern.test(value);
+}
+
 function addMessage(content, sender = "bot") {
   const wrapper = document.createElement("div"), bubble = document.createElement("div");
   wrapper.className = `message ${sender}`;
@@ -314,6 +324,12 @@ function showSuggestions() {
 async function ask(question) {
   const cleanQuestion = question.trim();
   if (!cleanQuestion) return;
+  if (containsPersonalData(cleanQuestion)) {
+    elements.input.value = "";
+    addMessage(ui[language].sensitiveDataWarning);
+    elements.input.focus();
+    return;
+  }
   addMessage(cleanQuestion, "user");
   elements.input.value = "";
   elements.input.disabled = true;

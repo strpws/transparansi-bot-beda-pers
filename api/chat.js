@@ -32,6 +32,12 @@ module.exports = async function handler(request, response) {
   if (!question || question.length > 500) {
     return response.status(400).json({ error: "Pertanyaan harus berisi 1–500 karakter." });
   }
+  if (containsPersonalData(question)) {
+    const message = language === "en"
+      ? "For safety, please remove personal data such as email addresses, phone numbers, home addresses, or sensitive information before sending your question."
+      : "Demi keamanan, hapus data pribadi seperti email, nomor telepon, alamat rumah, atau informasi sensitif sebelum mengirim pertanyaan.";
+    return response.status(400).json({ error: message, code: "PERSONAL_DATA_DETECTED" });
+  }
   if (!sheetUrl) {
     return response.status(400).json({ error: "Artikel tidak dikenali." });
   }
@@ -159,6 +165,14 @@ function parseCSV(text) {
 
 function normalizeKey(text) {
   return String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+}
+
+function containsPersonalData(text) {
+  const value = String(text || "");
+  const emailPattern = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+  const phonePattern = /(?:\+?\d[\s().-]*){9,}\d/;
+  const addressPattern = /\b(?:alamat|address|rumah|home address|jalan|jl\.?|jln\.?|street|st\.?|rt|rw)\b/i;
+  return emailPattern.test(value) || phonePattern.test(value) || addressPattern.test(value);
 }
 
 function rowsToRecords(rows) {
