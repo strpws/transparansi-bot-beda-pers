@@ -3,3 +3,6 @@ Logo-Ikon-Kompas.id big.png
 
 # Local Claude Code preview/dev config
 .claude/
+
+# Local-only cross-project notes (kept off the shared repo)
+FLUID-LAYOUT.md
